@@ -155,7 +155,7 @@ describe('select', () => {
             ]);
         });
 
-        it('should parse explicit joins', () => {
+        it('should parse explicit left joins', () => {
             ast = parser.parse('SELECT * FROM t join a.b b on t.a = b.c left join d on d.d = d.a');
 
             expect(ast.from).to.eql([
@@ -177,6 +177,38 @@ describe('select', () => {
                     table: 'd',
                     as: null,
                     join: 'LEFT JOIN',
+                    on: {
+                        type: 'binary_expr',
+                        operator: '=',
+                        left: { type: 'column_ref', table: 'd', column: 'd' },
+                        right: { type: 'column_ref', table: 'd', column: 'a' }
+                    }
+                }
+            ]);
+        });
+
+        it('should parse explicit right joins', () => {
+            ast = parser.parse('SELECT * FROM t OUTER JOIN a.b b on t.a = b.c right join d on d.d = d.a');
+
+            expect(ast.from).to.eql([
+                { db: null, table: 't', as: null },
+                {
+                    db: 'a',
+                    table: 'b',
+                    as: 'b',
+                    join: 'OUTER JOIN',
+                    on: {
+                        type: 'binary_expr',
+                        operator: '=',
+                        left: { type: 'column_ref', table: 't', column: 'a' },
+                        right: { type: 'column_ref', table: 'b', column: 'c' }
+                    }
+                },
+                {
+                    db: null,
+                    table: 'd',
+                    as: null,
+                    join: 'RIGHT JOIN',
                     on: {
                         type: 'binary_expr',
                         operator: '=',
