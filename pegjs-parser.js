@@ -10186,7 +10186,8 @@ function peg$parse(input, options) {
       'SELECT': true,
       'UNION': true,
       'UPDATE': true,
-      'WHERE': true
+      'WHERE': true,
+      'LIMIT': true,
     };
 
     function createUnaryExpr(op, e) {

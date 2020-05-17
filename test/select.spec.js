@@ -332,11 +332,29 @@ describe('select', () => {
 
     describe('limit clause', () => {
         it('should be parsed w/o offset', () => {
+            ast = parser.parse('SELECT DISTINCT a FROM b WHERE c = 0 GROUP BY d LIMIT 3');
+
+            expect(ast.limit).eql([
+                { type: 'number', value: 0 },
+                { type: 'number', value: 3 }
+            ]);
+        });
+
+        it('should be parsed w/o offset', () => {
             ast = parser.parse('SELECT DISTINCT a FROM b WHERE c = 0 GROUP BY d ORDER BY e limit 3');
 
             expect(ast.limit).eql([
                 { type: 'number', value: 0 },
                 { type: 'number', value: 3 }
+            ]);
+        });
+
+        it('should be parsed w/ offset', () => {
+            ast = parser.parse('SELECT DISTINCT a FROM b WHERE c = 0 GROUP BY d limit 1, 3');
+
+            expect(ast.limit).to.eql([
+                {type: 'number', value: 1 },
+                {type: 'number', value: 3 }
             ]);
         });
 
