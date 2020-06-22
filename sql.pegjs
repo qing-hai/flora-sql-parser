@@ -157,10 +157,15 @@ start
   / proc_stmts
 
 union_stmt
-  = head:select_stmt tail:(__ KW_UNION __ select_stmt)* {
+  = head:select_stmt tail:(__ KW_UNION __ KW_ALL? __ select_stmt)* {
       var cur = head;
       for (var i = 0; i < tail.length; i++) {
-        cur._next = tail[i][3];
+        var u=tail[i];
+        //console.log("u[3]",u[3],"u[5]",u[5])
+        cur._next = u[u.length-1];
+        if ((u.length===6) && u[3]==="ALL"){
+           cur._next.unionAll=true;
+        }
         cur = cur._next
       }
       return head;

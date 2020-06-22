@@ -304,6 +304,11 @@ describe('AST',() => {
                 sql = `select 1 union select '1' union select a from t union (select true)`;
                 expect(getParsedSql(sql)).to.equal(`SELECT 1 UNION SELECT '1' UNION SELECT "a" FROM "t" UNION SELECT TRUE`);
             });
+
+            it('should combine multiple statements union all', () => {
+                sql = `select 1 union select '1' union select a from t union all (select true)`;
+                expect(getParsedSql(sql)).to.equal(`SELECT 1 UNION SELECT '1' UNION SELECT "a" FROM "t" UNION ALL SELECT TRUE`);
+            });
         });
     });
 
