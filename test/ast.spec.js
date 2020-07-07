@@ -347,6 +347,11 @@ describe('AST',() => {
                        -- line comment 2`;
                 expect(getParsedSql(sql)).to.equal(`SELECT "a" FROM "t"`);
             });
+
+            it('should support // condition', () => {
+                sql = `SELECT a FROM t where f like '//' //line 1`;
+                expect(getParsedSql(sql)).to.equal(`SELECT "a" FROM "t" WHERE "f" LIKE '//'`);
+            });
         });
 
         describe('multi line comment', () => {
