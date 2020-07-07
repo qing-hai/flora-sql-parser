@@ -333,6 +333,32 @@ describe('AST',() => {
         });
     });
 
+    describe('comment', () => {
+        describe('line comment', () => {
+            it('should support --', () => {
+                sql = `SELECT a FROM t -- line comment 1
+                       -- line comment 2`;
+                expect(getParsedSql(sql)).to.equal(`SELECT "a" FROM "t"`);
+            });
+
+            it('should support //', () => {
+                sql = `SELECT a FROM t // line comment 1
+                       // line comment 2
+                       -- line comment 2`;
+                expect(getParsedSql(sql)).to.equal(`SELECT "a" FROM "t"`);
+            });
+        });
+
+        describe('multi line comment', () => {
+            it('should support /* ... */', () => {
+                sql = `SELECT a FROM t /* line comment 1
+                       -- line comment 2 
+                       // line comment 3*/`;
+                expect(getParsedSql(sql)).to.equal(`SELECT "a" FROM "t"`);
+            });
+        });
+    });
+
     describe('literals', () => {
         it('should support string values', () => {
             sql = `SELECT 'foo'`;

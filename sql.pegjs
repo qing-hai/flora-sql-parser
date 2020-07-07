@@ -996,6 +996,7 @@ block_comment
 
 line_comment
   = "--" (!EOL char)*
+  / "//" (!EOL char)*
 
 char = .
 
