@@ -626,7 +626,17 @@ primary
   / var_decl
 
 column_ref
-  = tbl:ident __ DOT __ col:column {
+  = MINUS tbl:ident __ DOT __ col:column {
+      var rst= {
+        type: 'column_ref',
+        table: tbl,
+        column: col.name,
+        exclude:true
+      };
+
+      return rst;
+    }
+  / tbl:ident __ DOT __ col:column {
       var rst= {
         type: 'column_ref',
         table: tbl,
@@ -635,6 +645,22 @@ column_ref
 
       return rst;
     }
+ / MINUS col:column {
+    var rst={
+        type: 'column_ref',
+        table: null,
+        column: col.name,
+        exclude: true
+     };
+      var isQuoted= !!col.isQuoted;
+
+      if (isQuoted){
+        rst.isQuoted=true;
+      }
+
+
+     return rst; 
+    }    
   / col:column {
     var rst={
         type: 'column_ref',
@@ -977,6 +1003,8 @@ OPT_SQL_BUFFER_RESULT   = "SQL_BUFFER_RESULT"i
 DOT       = '.'
 COMMA     = ','
 STAR      = '*'
+MINUS     = '-'
+
 LPAREN    = '('
 RPAREN    = ')'
 

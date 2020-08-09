@@ -105,6 +105,35 @@ describe('select', () => {
                 }
             ]);
         });
+
+        it('should parse "-" exclude column', () => {
+            ast = parser.parse('SELECT *, -_id FROM t');
+            expect(ast.columns).to.eql([
+                { expr: { type: 'column_ref', 'table': null, column: '*' }, as: null },
+                { expr: { type: 'column_ref', 'table': null, column: '_id', exclude: true }, as: null },
+            ]);
+        });
+
+
+        it('should parse exclude columns', () => {
+            ast = parser.parse('SELECT b.c as bc, 1+3, -_id, -f, -b.d as bd FROM t');
+
+            expect(ast.columns).to.eql([
+                { expr: { type: 'column_ref', table: 'b', column: 'c' },  as: 'bc' },
+                {
+                    expr: {
+                        type: 'binary_expr',
+                        operator: '+',
+                        left: { type: 'number', value: 1 },
+                        right: { type: 'number', value: 3 }
+                    },
+                    as: null
+                },
+                { expr: { type: 'column_ref', 'table': null, column: '_id', exclude: true }, as: null },
+                { expr: { type: 'column_ref', 'table': null, column: 'f' , exclude: true}, as: null },
+                { expr: { type: 'column_ref', table: 'b', column: 'd', exclude:true },  as: 'bd' },
+            ]);
+        });
     });
 
     describe('from clause', () => {
