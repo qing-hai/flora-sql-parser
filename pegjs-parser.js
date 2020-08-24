@@ -10369,7 +10369,7 @@ function peg$parse(input, options) {
       'SELECT': true,
       'SET': true,
       'SHOW': true,
-      'STATUS': true, // reserved (MySQL)
+      //'STATUS': true, // reserved (MySQL)
 
       //'TABLE': true, //removed by qinghai
       'THEN': true,
